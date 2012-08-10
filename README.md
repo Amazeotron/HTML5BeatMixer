@@ -10,3 +10,6 @@ Dependencies:
 -	<a href="http://www.createjs.com/#!/EaselJS" alt="EaselJS" title="EaselJS">CreateJS (EaselJS)</a>
 -	<a href="http://www.kineticjs.com/">KineticJS</a> (didn't get very far with this implementation yet)
 -	<a href="https://www.google.com/intl/en/chrome/browser/" alt="Chrome" title="Chrome">Browser that supports webkitAudioContext and Canvas</a>
+
+Notes:
+-	You need to supply your own sounds. Look at the AudioPlaybackController.js file to see how to load them. I will probably change this to load from a XHR via JSON, but for now it's hard coded.
