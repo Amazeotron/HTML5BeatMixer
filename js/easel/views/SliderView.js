@@ -5,7 +5,8 @@ define(['libs/easeljs.min'], function(easel) {
 		_stage,
 		_container,
 		_position = 0,
-		_callbacks = [];
+		_callbacks = [],
+		_offset = 11; // How far to offset the slider knob when dragging;
 	
 	var init = function(stage, xPos, yPos) {
 		_stage = stage;
@@ -30,17 +31,17 @@ define(['libs/easeljs.min'], function(easel) {
 		_knob = new Bitmap("img/sliderHandle.png");
 		_container.addChild(_knob);
 		_knob.mouseEnabled = true;
-		_knob.x = 11;
+		_knob.x = _offset;
 		_knob.y = 38;
-		_knob.regX = 11;
+		_knob.regX = _offset;
 		
 		_container.onPress = function(event) {
 			_knob.hasMouseDown = true;
 			_stage.onMouseMove = function(event) {
 				if (_knob.hasMouseDown) {
 					var pt = _track.localToGlobal(_track.x, _track.y);
-					if (event.stageX > (pt.x + 14) && event.stageX < (pt.x + _track.image.width - (_knob.image.width - 11))) {
-						_knob.x = _container.globalToLocal(event.stageX, event.stageY).x;
+					if (event.stageX > (pt.x + _knob.image.width + 1) && event.stageX < (pt.x + _track.image.width - 3)) {
+						_knob.x = _container.globalToLocal(event.stageX, event.stageY).x - _offset;
 						updatePosition();
 						_stage.update();
 						
@@ -51,7 +52,7 @@ define(['libs/easeljs.min'], function(easel) {
 					
 				} else {
 					_stage.onMouseMove = null;
-					_knob.onMouseUp = null;
+					_stage.onMouseUp = null;
 				}
 			}
 			_stage.onMouseUp = function(event) {
@@ -70,13 +71,15 @@ define(['libs/easeljs.min'], function(easel) {
 		_callbacks.push(callback);
 	}
 	
-	// normalizes the range from 9 - 128 to 0 - 10
+	// normalizes the range from 11 - 129 to 0 - 10
 	function updatePosition() {
 		var xPos = _knob.x;
-		xPos -= 9; // 0 - 119
-		xPos /= 119; // convert to percentage
+		xPos -= 11; // 0 - 128
+		xPos /= 128; // convert to percentage
 		xPos *= 10; // 0 - 10;
+		xPos += 1; // 1 - 11
 		_position = Math.round(xPos);
+		console.log(_position);
 	}
 	
 	return {

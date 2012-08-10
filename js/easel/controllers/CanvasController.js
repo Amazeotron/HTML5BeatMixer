@@ -151,7 +151,6 @@ define([
 		
 		slider.init(_stage, 17, 180);
 		slider.addCallback(function() {
-			console.log(slider.getPosition());
 			soundBoard.setSpeed(slider.getPosition());
 		});
 		soundBoard.setSpeed(slider.getPosition());
