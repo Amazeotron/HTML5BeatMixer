@@ -6,9 +6,7 @@ I built this as a way to learn the webkitAudioContext API, so don't expect anyth
 Right now, the code isn't very well commented. I'll be adding that soon.
 
 Dependencies:
-<ul>
-	<li><a href="http://requirejs.org/" alt="RequireJS" title="RequireJS">RequireJS</a></li>
-	<li><a href="http://www.createjs.com/#!/EaselJS" alt="EaselJS" title="EaselJS">CreateJS (EaselJS)</a></li>
-	<li><a href="http://www.kineticjs.com/">KineticJS</a> (didn't get very far with this implementation yet)</li>
-	<li><a href="https://www.google.com/intl/en/chrome/browser/" alt="Chrome" title="Chrome">Browser that supports webkitAudioContext and Canvas</a></li>
-</ul>
+-	<a href="http://requirejs.org/" alt="RequireJS" title="RequireJS">RequireJS</a>
+-	<a href="http://www.createjs.com/#!/EaselJS" alt="EaselJS" title="EaselJS">CreateJS (EaselJS)</a>
+-	<a href="http://www.kineticjs.com/">KineticJS</a> (didn't get very far with this implementation yet)
+-	<a href="https://www.google.com/intl/en/chrome/browser/" alt="Chrome" title="Chrome">Browser that supports webkitAudioContext and Canvas</a>
