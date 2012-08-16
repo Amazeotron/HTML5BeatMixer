@@ -79,7 +79,7 @@ define(['libs/easeljs.min'], function(easel) {
 			this._on.visible = false;
 			this._off.visible = false;
 		}
-		this._stage.update();
+		// this._stage.update();
 	}
 	
 	BeatButton.prototype.setUnHighlighted = function() {
@@ -94,7 +94,23 @@ define(['libs/easeljs.min'], function(easel) {
 			this._on.visible = false;
 			this._off.visible = true;
 		}
-		this._stage.update();
+		// this._stage.update();
+	}
+	
+	BeatButton.prototype.setOn = function() {
+		this._isOn = true;
+		this._onHighlight.visible = false;
+		this._offHighlight.visible = false;
+		this._on.visible = true;
+		this._off.visible = false;
+	}
+	
+	BeatButton.prototype.setOff = function() {
+		this._isOn = false;
+		this._onHighlight.visible = false;
+		this._offHighlight.visible = false;
+		this._on.visible = false;
+		this._off.visible = true;
 	}
 	
 	

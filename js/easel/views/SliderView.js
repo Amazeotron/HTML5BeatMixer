@@ -67,6 +67,17 @@ define(['libs/easeljs.min'], function(easel) {
 		return _position;
 	}
 	
+	// Pass in a value from 0-10
+	var setPosition = function(value) {
+		_position = value;
+		var knobX = _position;
+		knobX /= 10; // percentage, from 0-1
+		knobX *= 128; // value from 0-128
+		_knob.x = knobX;
+		_stage.update();
+		console.log("Updating slider position: " + _position);
+	}
+	
 	var addCallback = function(callback) {
 		_callbacks.push(callback);
 	}
@@ -85,6 +96,7 @@ define(['libs/easeljs.min'], function(easel) {
 	return {
 		init: init,
 		getPosition: getPosition,
+		setPosition: setPosition,
 		addCallback: addCallback
 	}
 });

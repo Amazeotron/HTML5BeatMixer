@@ -3,12 +3,14 @@ define([
        	'libs/easeljs.min', 
        	'easel/models/SoundBoard', 
        	'easel/views/ToggleStartStopView',
+       	'easel/views/ToggleView',
        	'easel/views/BeatButtonView',
        	'easel/views/SliderView'], 
        	function(
        		easel,
        		soundBoard,
        		startStopButton,
+       		multiToggle,
        		BeatButton,
        		slider) {
 	
@@ -24,10 +26,7 @@ define([
 		_stage = stage;
 		soundBoard.addReadyCallback(soundsLoaded);
 		soundBoard.addBeatCallback(beatCallback);
-	}
-	
-	var addStartStopCallback = function(callback) {
-		startStopButton.addToggleCallback(callback);
+		soundBoard.addUpdateCallback(handleModelUpdate);
 	}
 	
 	
@@ -60,6 +59,28 @@ define([
 				})(dot), 100);
 			}
 		}
+		_stage.update();
+	}
+	
+	function handleModelUpdate() {
+		var model = soundBoard.getBoardModel(),
+			counter = 0,
+			row,
+			dot,
+			rowIndex,
+			len1 = model.length,
+			colIndex,
+			len2;
+		for (rowIndex = 0; rowIndex < len1; rowIndex++) {
+			row = model[rowIndex];
+			len2 = row.length;
+			for (colIndex = 0; colIndex < len2; colIndex++) {
+				dot = _dotButtons[counter];
+				row[colIndex] === 0 ? dot.setOff() : dot.setOn();
+				counter++;
+			}
+		}
+		_stage.update();
 	}
 	
 	function handleDotClick(event) {
@@ -75,11 +96,13 @@ define([
 				break;
 			}
 		}
+		_stage.update();
 	}
 	
 	function handleStartStop(isOn) {
-		
+		soundBoard.toggle();
 	}
+	
 	
 	
 	// ----------------------------------------
@@ -153,7 +176,15 @@ define([
 		slider.addCallback(function() {
 			soundBoard.setSpeed(slider.getPosition());
 		});
+		slider.setPosition(8);
 		soundBoard.setSpeed(slider.getPosition());
+		
+		multiToggle.init(_stage, 27, 270);
+		multiToggle.addToggleCallback(function(isMulti) {
+			soundBoard.setMulti(isMulti);
+		});
+		multiToggle.toggle(); // Turn it on
+		
 		_stage.update();
 	}
 	
@@ -179,7 +210,6 @@ define([
 	// ----------------------------------------
 	
 	return {
-		init: init,
-		addStartStopCallback: addStartStopCallback
+		init: init
 	}
 });

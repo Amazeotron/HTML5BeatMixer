@@ -31,22 +31,7 @@ require([
 	
 	stage.mouseEventsEnabled = true;
 	
-	soundBoard.addReadyCallback(handleSoundsLoaded);
-	soundBoard.addBeatCallback(handleBeat);
-	
 	audioController.init(stage);
 	canvasController.init(stage);
-	
-	canvasController.addStartStopCallback(function(isOn) {
-		soundBoard.toggle();
-	});
-	
-	function handleSoundsLoaded() {
-		
-	}
-	
-	function handleBeat() {
-		soundBoard.playSoundsInColumn(soundBoard.getBeat());
-	}
 	
 });
