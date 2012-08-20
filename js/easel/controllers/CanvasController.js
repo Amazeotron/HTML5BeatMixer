@@ -1,18 +1,22 @@
 
 define([
        	'libs/easeljs.min', 
-       	'easel/models/SoundBoard', 
+       	'easel/models/SoundBoard',
+       	'easel/controllers/AudioPlaybackController', 
        	'easel/views/ToggleStartStopView',
        	'easel/views/ToggleView',
        	'easel/views/BeatButtonView',
-       	'easel/views/SliderView'], 
+       	'easel/views/SliderView',
+       	'easel/views/RadioGroupView'], 
        	function(
        		easel,
        		soundBoard,
+       		audioController,
        		startStopButton,
        		multiToggle,
        		BeatButton,
-       		slider) {
+       		slider,
+       		radioGroup) {
 	
 	var _bgLayer,
 		_dots,
@@ -27,6 +31,11 @@ define([
 		soundBoard.addReadyCallback(soundsLoaded);
 		soundBoard.addBeatCallback(beatCallback);
 		soundBoard.addUpdateCallback(handleModelUpdate);
+		
+		drawBg();
+		drawControls();
+		drawDividers();
+		initInstrumentTypes();
 	}
 	
 	
@@ -35,10 +44,6 @@ define([
 	// ----------------------------------------
 	
 	function soundsLoaded() {
-		drawBg();
-		drawControls();
-		drawDividers();
-		drawLabels();
 		drawDots();
 	}
 	
@@ -116,21 +121,30 @@ define([
 	
 	function drawDots() {
 		
+		clearDots();
+		
 		var model = soundBoard.getBoardModel(), 
 			numInstruments = soundBoard.getNumInstruments(),
 			numBeats = soundBoard.getNumBeats();
 		
 		_dots = new Container();
 		_stage.addChild(_dots);
-		_dots.x = 350;
+		_dots.x = 230;
 		_dots.y = 25;
 		for (var i = 0; i < numInstruments; i++) {
+			
+			// draw labels
+			var label = new Text(soundBoard.getLabelAt(i), "14px Arial", "#a3a3a3");
+			label.y = i * 47 + 24;
+			_dots.addChild(label);
+			
+			// Draw a row of dots
 			for (var k = 0; k < numBeats; k++) {
 				var dot = new BeatButton();
 				dot.init(_stage, "button_" + i + "_" + k, handleDotClick);
 				_dotButtons.push(dot);
 				var dotContainer = dot.getContainer();
-				dotContainer.x = k * 60;
+				dotContainer.x = k * 60 + 140;
 				dotContainer.y = i * 47;
 				_dots.addChild(dotContainer);
 			}
@@ -139,25 +153,29 @@ define([
 		_stage.update();
 	}
 	
-	function drawLabels() {
-		_labels = new Container();
-		_stage.addChild(_labels);
-		_labels.x = 210;
-		_labels.y = 49;
-		for (var i = 0, len = soundBoard.getNumInstruments(); i < len; i++) {
-			var label = new Text(soundBoard.getLabelAt(i), "14px Arial", "#a3a3a3");
-			label.y = i * 47;
-			_labels.addChild(label);
+	function clearDots() {
+		// Call remove on each dot
+		if (_dots) {
+			var numDots = _dotButtons.length, 
+				i;
+			
+			for (i = 0; i < numDots; i++) {
+				var dot = _dotButtons[i];
+				dot.remove();
+			}
+			
+			_dots.removeAllChildren();
+			_dotButtons = [];
 		}
-		_stage.update();
+		
 	}
 	
 	function drawDividers() {
 		_dividers = new Container();
 		_stage.addChild(_dividers);
 		
-		var rect1 = getRect(Graphics.getRGB(0,0,0),		180, 0, 2, 800);
-		var rect2 = getRect(Graphics.getRGB(63,64,70),	182, 0, 2, 800);
+		var rect1 = getRect(Graphics.getRGB(0,0,0),		200, 0, 2, 800);
+		var rect2 = getRect(Graphics.getRGB(63,64,70),	202, 0, 2, 800);
 		var rect3 = getRect(Graphics.getRGB(0,0,0), 	858, 0, 2, 800);
 		var rect4 = getRect(Graphics.getRGB(63,64,70),	860, 0, 2, 800);
 		_dividers.addChild(rect1);
@@ -184,9 +202,18 @@ define([
 			soundBoard.setMulti(isMulti);
 		});
 		multiToggle.toggle(); // Turn it on
-		
-		_stage.update();
 	}
+	
+	function initInstrumentTypes() {
+		soundBoard.loadInstrumentTypes(function(data) {
+			radioGroup.init(_stage, data.instruments, 15, 400);
+			radioGroup.addCallback(function(event, name) {
+				audioController.loadSoundsByName(name);
+			});
+			_stage.update();
+		});
+	}
+	
 	
 	/*
 	* Takes an RGB color, x, y, width, height, and returns a Shape

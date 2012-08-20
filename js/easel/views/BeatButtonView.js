@@ -113,6 +113,11 @@ define(['libs/easeljs.min'], function(easel) {
 		this._off.visible = true;
 	}
 	
+	BeatButton.prototype.remove = function() {
+		this._container.onClick = null;
+		this._container.removeAllChildren();
+	}
+	
 	
 	// ----------------------------------------
 	// PRIVATE METHODS

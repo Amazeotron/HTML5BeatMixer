@@ -14,12 +14,14 @@ require.config({
 });
 
 require([
+        'jquery',
         'libs/easeljs.min', 
         'easel/views/ToggleStartStopView',
         'easel/controllers/AudioPlaybackController',
         'easel/controllers/CanvasController',
         'easel/models/SoundBoard'
         ], function(
+                    $,
                     easel, 
                     toggleStartStop,
                     audioController,
@@ -31,7 +33,7 @@ require([
 	
 	stage.mouseEventsEnabled = true;
 	
-	audioController.init(stage);
+	// audioController.loadPercussion();
 	canvasController.init(stage);
 	
 });

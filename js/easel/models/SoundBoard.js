@@ -1,5 +1,5 @@
 
-define(['utils/AudioBufferLoader'], function(buffer) {
+define(['jquery', 'utils/AudioBufferLoader'], function($, buffer) {
 	
 	var _allBuckets = [],
 		_context = new webkitAudioContext(),
@@ -21,12 +21,25 @@ define(['utils/AudioBufferLoader'], function(buffer) {
 		_numInstruments = sounds.length;
 		// AudioBufferLoader expects an array of paths, so we need to pull them out
 		var soundPaths = [];
+		_labels = [];
 		for (var i = 0; i < _numInstruments; i++) {
 			soundPaths.push(sounds[i].path);
 			_labels.push(sounds[i].name);
 		}
 		buffer.init(_context, soundPaths, handleBuffersLoaded);
 		buffer.load();
+	}
+	
+	/*
+	* Loads a JSON array of intrument types
+	*/
+	var loadInstrumentTypes = function(callback) {
+		$.ajax({
+			url: 'data/instruments.json',
+			success: function(data) {
+				callback(data);
+			}
+		})
 	}
 	
 	var addSoundAt = function(soundIndex, row) {
@@ -168,6 +181,8 @@ define(['utils/AudioBufferLoader'], function(buffer) {
 	
 	function handleBuffersLoaded(bufferList) {
 		_bufferList = bufferList;
+		_allBuckets = [];
+		_boardModel = [];
 		// Randomly populate the sounds
 		for (var i = 0; i < _numInstruments; i++) {
 			_allBuckets[i] = [];
@@ -193,6 +208,7 @@ define(['utils/AudioBufferLoader'], function(buffer) {
 	}
 	
 	return {
+		loadInstrumentTypes: loadInstrumentTypes,
 		loadSounds: loadSounds,
 		addSoundAt: addSoundAt,
 		removeSoundAt: removeSoundAt,
