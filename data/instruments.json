@@ -2,10 +2,6 @@
 	"instruments": [
 		{"label": "Percussion", "index": 0},
 		{"label": "Steel Drums", "index": 1},
-		{"label": "Flutes", "index": 2},
-		{"label": "Synth 1", "index": 3},
-		{"label": "Synth 2", "index": 4},
-		{"label": "Horns", "index": 5},
-		{"label": "Farts", "index": 6}
+		{"label": "Synth 2", "index": 4}
 	]
 }

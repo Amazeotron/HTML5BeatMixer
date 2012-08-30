@@ -175,9 +175,9 @@ define([
 		_stage.addChild(_dividers);
 		
 		var rect1 = getRect(Graphics.getRGB(0,0,0),		200, 0, 2, 800);
-		var rect2 = getRect(Graphics.getRGB(63,64,70),	202, 0, 2, 800);
+		var rect2 = getRect(Graphics.getRGB(63,64,70),202, 0, 2, 800);
 		var rect3 = getRect(Graphics.getRGB(0,0,0), 	858, 0, 2, 800);
-		var rect4 = getRect(Graphics.getRGB(63,64,70),	860, 0, 2, 800);
+		var rect4 = getRect(Graphics.getRGB(63,64,70),860, 0, 2, 800);
 		_dividers.addChild(rect1);
 		_dividers.addChild(rect2);
 		_dividers.addChild(rect3);

@@ -39,7 +39,7 @@ define(['jquery', 'utils/AudioBufferLoader'], function($, buffer) {
 			success: function(data) {
 				callback(data);
 			}
-		})
+		});
 	}
 	
 	var addSoundAt = function(soundIndex, row) {
