@@ -15,6 +15,7 @@ require.config({
 
 require([
         'jquery',
+        'utils/RequestAnimationFrame',
         'libs/easeljs.min', 
         'easel/views/ToggleStartStopView',
         'easel/controllers/AudioPlaybackController',
@@ -22,6 +23,7 @@ require([
         'easel/models/SoundBoard'
         ], function(
                     $,
+                    raf,
                     easel, 
                     toggleStartStop,
                     audioController,
@@ -35,5 +37,12 @@ require([
 	
 	// audioController.loadPercussion();
 	canvasController.init(stage);
+
+	// Start rendering the Canvas!
+	function render() {
+		requestAnimationFrame(render);
+		stage.update();
+	}
+	render();
 	
 });
