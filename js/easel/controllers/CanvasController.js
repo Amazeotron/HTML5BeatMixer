@@ -15,7 +15,7 @@ define([
        		startStopButton,
        		multiToggle,
        		BeatButton,
-       		slider,
+       		speedSlider,
        		radioGroup) {
 	
 	var _bgLayer,
@@ -35,7 +35,6 @@ define([
 		drawBg();
 		drawControls();
 		drawDividers();
-		initInstrumentTypes();
 	}
 	
 	
@@ -93,10 +92,8 @@ define([
 			if (_dotButtons[i].getName() === event.target.name) {
 				var btn = _dotButtons[i];
 				var name = event.target.name;
-				var row = name.substring(name.indexOf("_")+1, name.lastIndexOf("_"));
-				var col = name.substr(name.lastIndexOf("_")+1, 1);
 				
-				btn.isOn() ? soundBoard.addSoundAt(col, row) : soundBoard.removeSoundAt(col, row);
+				btn.isOn() ? soundBoard.addSoundAt(getButtonColumn(name), getButtonRow(name)) : soundBoard.removeSoundAt(col, row);
 				
 				break;
 			}
@@ -106,6 +103,14 @@ define([
 	
 	function handleStartStop(isOn) {
 		soundBoard.toggle();
+	}
+
+	function getButtonRow(name) {
+		return name.substring(name.indexOf("_")+1, name.lastIndexOf("_"));
+	}
+
+	function getButtonColumn(name) {
+		return name.substr(name.lastIndexOf("_")+1, 1);
 	}
 	
 	
@@ -143,10 +148,8 @@ define([
 				var dot = new BeatButton();
 				dot.init(_stage, "button_" + i + "_" + k, handleDotClick);
 				_dotButtons.push(dot);
-				var dotContainer = dot.getContainer();
-				dotContainer.x = k * 60 + 140;
-				dotContainer.y = i * 47;
-				_dots.addChild(dotContainer);
+				dot.setPosition(k * 60 + 140, i * 47);
+				_dots.addChild(dot.getContainer());
 			}
 		}
 		
@@ -167,7 +170,24 @@ define([
 			_dots.removeAllChildren();
 			_dotButtons = [];
 		}
-		
+	}
+
+	/*
+	* Loops through all the dots and sets a random beat
+	* @param multiColumn: Boolean. Sets if there can be more than one sound per column
+	* TODO: Implement the multiColumn ability!
+	*/
+	function setRandomBeat(multiColumn) {
+		soundBoard.clearBoard();
+		for (var i = 0, len = _dotButtons.length; i < len; i++) {
+			var btn = _dotButtons[i],
+			btnName = btn.getName();
+			btn.setUnHighlighted();
+			if (Math.random() < 0.1) {
+				soundBoard.addSoundAt(getButtonColumn(btnName), getButtonRow(btnName));
+				btn.setHighlighted();
+			}
+		}
 	}
 	
 	function drawDividers() {
@@ -187,33 +207,40 @@ define([
 	}
 	
 	function drawControls() {
-		startStopButton.init(_stage, 27, 30);
+		startStopButton.init(_stage, 35, 30);
 		startStopButton.addToggleCallback(handleStartStop);
 		
-		slider.init(_stage, 17, 180);
-		slider.addCallback(function() {
-			soundBoard.setSpeed(slider.getPosition());
+		speedSlider.init(_stage, 28, 180);
+		speedSlider.addCallback(function() {
+			soundBoard.setSpeed(speedSlider.getPosition());
 		});
-		slider.setPosition(8);
-		soundBoard.setSpeed(slider.getPosition());
+		speedSlider.setPosition(8);
+		soundBoard.setSpeed(speedSlider.getPosition());
 		
-		multiToggle.init(_stage, 27, 270);
+		multiToggle.init(_stage, 40, 270);
 		multiToggle.addToggleCallback(function(isMulti) {
 			soundBoard.setMulti(isMulti);
 		});
 		multiToggle.toggle(); // Turn it on
-	}
-	
-	function initInstrumentTypes() {
+
+		// Draw randomize button
+		var self = this;
+		var randomizeButton = new BeatButton();
+		randomizeButton.init(_stage, "randomizeButton", function(event) {
+			setRandomBeat(true);
+		});
+		randomizeButton.setPosition(20, 370);
+		_stage.addChild(randomizeButton.getContainer());
+
+		// Draw intrument types buttons
 		soundBoard.loadInstrumentTypes(function(data) {
-			radioGroup.init(_stage, data.instruments, 15, 400);
+			radioGroup.init(_stage, data.instruments, 15, 450);
 			radioGroup.addCallback(function(event, name) {
 				audioController.loadSoundsByName(name);
 			});
 			_stage.update();
 		});
 	}
-	
 	
 	/*
 	* Takes an RGB color, x, y, width, height, and returns a Shape

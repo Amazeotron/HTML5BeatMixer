@@ -112,6 +112,11 @@ define(['libs/easeljs.min'], function(easel) {
 		this._on.visible = false;
 		this._off.visible = true;
 	}
+
+	BeatButton.prototype.setPosition = function(xPos, yPos) {
+		this._container.x = xPos;
+		this._container.y = yPos;
+	}
 	
 	BeatButton.prototype.remove = function() {
 		this._container.onClick = null;

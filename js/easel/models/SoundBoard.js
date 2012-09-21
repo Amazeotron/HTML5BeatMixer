@@ -175,7 +175,14 @@ define(['jquery', 'utils/AudioBufferLoader'], function($, buffer) {
 		if (_allBuckets[row][column] === 0) return 0;
 		var source = _context.createBufferSource();
 		source.buffer = _allBuckets[row][column];
-		source.connect(_context.destination);
+		// source.connect(_context.destination);
+		// Apply a filter
+		var filter = _context.createBiquadFilter();
+		filter.connect(_context.destination);
+		filter.type = 0; // low pass filter
+		filter.frequency.value = 5000; // Set cutoff to 440Hz (low note)
+		source.connect(filter);
+		filter.connect(_context.destination);
 		return source;
 	}
 	
